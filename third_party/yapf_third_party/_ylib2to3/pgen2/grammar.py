@@ -13,6 +13,8 @@ fallback token code OP, but the parser needs the actual token code.
 
 # Python imports
 import pickle
+import os
+import tempfile
 
 # Local imports
 from . import token
@@ -86,8 +88,9 @@ class Grammar(object):
 
   def dump(self, filename):
     """Dump the grammar tables to a pickle file."""
-    with open(filename, 'wb') as f:
+    with tempfile.NamedTemporaryFile(mode='wb') as f:
       pickle.dump(self.__dict__, f, pickle.HIGHEST_PROTOCOL)
+      os.link(f.name, filename)
 
   def load(self, filename):
     """Load the grammar tables from a pickle file."""
